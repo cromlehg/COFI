@@ -424,11 +424,21 @@ contract TGE is RetrieveTokenFeature {
     }
     return amountInWei;
   }
+
+  function isContract(address _addr) private view returns (bool is_contract) {
+    uint length;
+    assembly {
+      //retrieve the size of the code on target address, this needs assembly
+      length := extcodesize(_addr)
+    }
+    return (length>0);
+  }
   
   function () external payable {
     uint actual = directTarnsferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if(actual < msg.value) {
+      require(isContract(msg.sender));
       // check msg.sender not code to prevent re-entrance attack
       msg.sender.transfer(msg.value.sub(actual));
     }
