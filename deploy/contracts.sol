@@ -343,12 +343,14 @@ contract TGE is RetrieveTokenFeature {
   
   uint public tokensToFounders = 90000000000000000000000000; 
 
+  mapping (address => bool) whiteList;
+
   function TGE() public {
     addMilestone(1515974400,20,1516579200);
     addMilestone(1516579200,15,1517097600);
     addMilestone(1517184000,10,1517702400);
     addMilestone(1517702400,5,1517706000);
-    addMilestone(1517706000,5,1519257600);
+    addMilestone(1517706000,0,1519257600);
   }
 
   function setWallet(address newWallet) public onlyOwner {
@@ -412,7 +414,7 @@ contract TGE is RetrieveTokenFeature {
     return amountTokensInDouble; 
   }
   
-  function directTarnsferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
+  function directTransferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
     uint calculatedTokens = calculateTokens(amountInWei); 
     uint transferredTokens = directTransfer(to, calculatedTokens);
     if(transferredTokens < calculatedTokens) {
@@ -434,8 +436,13 @@ contract TGE is RetrieveTokenFeature {
     return (length>0);
   }
   
+  function addToWhiteList(address addr) public {
+    whiteList[addr] = true;
+  }
+  
   function () external payable {
-    uint actual = directTarnsferByETH(msg.sender, msg.value);
+    require(whiteList[msg.sender]);
+    uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if(actual < msg.value) {
       require(isContract(msg.sender));
