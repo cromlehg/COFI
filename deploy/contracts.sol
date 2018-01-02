@@ -229,7 +229,17 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-contract COFIToken is StandardToken, Ownable {
+contract RetrieveTokenFeature is Ownable {
+
+  function retrieveTokens(address to, address anotherToken) public onlyOwner {
+    ERC20 alienToken = ERC20(anotherToken);
+    alienToken.transfer(to, alienToken.balanceOf(this));
+  }
+
+}
+
+
+contract COFIToken is StandardToken, RetrieveTokenFeature {
     
   string public symbol = "COFI";
   
@@ -257,12 +267,55 @@ contract COFIToken is StandardToken, Ownable {
     require(msg.sender == saleAgent || msg.sender == owner);
     locked = false;      
   }
+
+  function transfer(address _to, uint256 _value) public notLocked returns (bool) {
+    super.transfer(_to, _value);
+  }
+
+  function transferFrom(address _from, address _to, uint256 _value) public notLocked returns (bool) {
+    super.transferFrom(_from, _to, _value);
+  }
   
-  // should Implementation retrive function
-    
 }
 
-contract TGE is Ownable {
+contract FundationTokensWallet is Ownable {
+    
+  using SafeMath for uint256;
+    
+  COFIToken public token; 
+
+  uint public start;
+  
+  uint public period = 2 years;
+  
+  uint public duration = 24 weeks;
+  
+  uint public started;
+  
+  uint public startBalance;
+
+  function setToken(address newToken) public onlyOwner {
+    token = COFIToken(newToken);
+  }
+  
+  function start() public onlyOwner {
+    started = now;
+    startBalance = token.balanceOf(this);
+  }
+  
+  function retrieveTokens(address to) public onlyOwner {
+    if(now > started + period) {
+      token.transfer(to, token.balanceOf(this));
+    } else {
+      uint cliffTokens = startBalance.div(period.div(duration));
+      uint tokensToRetreive = now.sub(started).div(duration).mul(cliffTokens);
+      token.transfer(to, tokensToRetreive);
+    }
+  }
+  
+}
+
+contract TGE is RetrieveTokenFeature {
  
   using SafeMath for uint256;
     
@@ -273,6 +326,10 @@ contract TGE is Ownable {
   }
   
   address public wallet;
+
+  address public foundersTokensWallet;
+
+  FundationTokensWallet public fundationTokensWallet = new FundationTokensWallet();
   
   uint public price = 7500;
   
@@ -282,16 +339,33 @@ contract TGE is Ownable {
   
   uint constant public PERCENT_RATE = 100;
   
-  uint public tokensToSell;
+  uint public tokensToSell = 150000000000000000000000000;
   
-  uint public tokensToFounders; //
-  
+  uint public tokensToFounders = 90000000000000000000000000; 
+
+  function TGE() public {
+    addMilestone(1515974400,20,1516579200);
+    addMilestone(1516579200,15,1517097600);
+    addMilestone(1517184000,10,1517702400);
+    addMilestone(1517702400,5,1517706000);
+    addMilestone(1517706000,5,1519257600);
+  }
+
   function setWallet(address newWallet) public onlyOwner {
     wallet = newWallet;  
   }
   
   function setToken(address newToken) public onlyOwner {
     token = COFIToken(newToken);  
+    fundationTokensWallet.setToken(newToken);
+  }
+
+  function setTokensToFounders(address newFoundersTokensWallet) public onlyOwner {
+    foundersTokensWallet = newFoundersTokensWallet;  
+  }
+
+  function setTokensToFounders(uint newTokensToSell) public onlyOwner {
+    tokensToSell = newTokensToSell;  
   }
   
   function setTokensToSell(uint newTokensToSell) public onlyOwner {
@@ -334,35 +408,40 @@ contract TGE is Ownable {
       amountTokensInDouble = amountTokensInDouble.sub(tokensToSell);
     }
     tokensToSell = tokensToSell.sub(amountTokensInDouble);
-    assert(token.transfer(to, amountTokensInDouble));
+    token.transfer(to, amountTokensInDouble);
     return amountTokensInDouble; 
   }
   
-  function directMintByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
+  function directTarnsferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
     uint calculatedTokens = calculateTokens(amountInWei); 
     uint transferredTokens = directTransfer(to, calculatedTokens);
     if(transferredTokens < calculatedTokens) {
       uint bonus = getBonus();
-      if(bonus > 0)
+      if(bonus > 0) {
         transferredTokens = transferredTokens.mul(PERCENT_RATE).div(bonus); 
+      }
       amountInWei = transferredTokens.div(price);
     }
     return amountInWei;
   }
   
   function () external payable {
-    uint actual = directMintByETH(msg.sender, msg.value);
+    uint actual = directTarnsferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if(actual < msg.value) {
-      // chec msg.sender nnt code to prevent re-entranc attack
+      // check msg.sender not code to prevent re-entrance attack
       msg.sender.transfer(msg.value.sub(actual));
     }
   }
   
   function finish() public {
-    // TODO  
+    token.transfer(foundersTokensWallet, tokensToFounders);    
+    token.transfer(fundationTokensWallet, token.balanceOf(this));
+    token.unlock();
+    fundationTokensWallet.start();
+    fundationTokensWallet.transferOwnership(owner);
   }
   
-   // should Implementation retrive function
-    
 }
+
+
