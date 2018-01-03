@@ -302,7 +302,7 @@ contract COFIToken is StandardToken, RetrieveTokenFeature, BurnableToken {
   
 }
 
-contract FoundationTokensWallet is Ownable {
+contract FoundersTokensWallet is Ownable {
     
   using SafeMath for uint256;
     
@@ -351,9 +351,9 @@ contract TGE is RetrieveTokenFeature {
   
   address public wallet;
 
-  address public foundersTokensWallet;
-
-  FoundationTokensWallet public foundationTokensWallet = new FoundationTokensWallet();
+  FoundersTokensWallet public foundersTokensWallet = new FoundersTokensWallet();
+  
+  address public foundationTokensWallet;
   
   uint public price = 7500;
   
@@ -385,11 +385,15 @@ contract TGE is RetrieveTokenFeature {
   
   function setToken(address newToken) public onlyOwner {
     token = COFIToken(newToken);  
-    foundationTokensWallet.setToken(newToken);
+    foundersTokensWallet.setToken(newToken);
   }
 
-  function setTokensToFounders(address newFoundersTokensWallet) public onlyOwner {
-    foundersTokensWallet = newFoundersTokensWallet;  
+  function setFoundationTokensWallet(address newFoundationTokensWallet) public onlyOwner {
+    foundationTokensWallet = newFoundationTokensWallet;  
+  }
+
+  function setTokensToFounders(uint newTokensToFounders) public onlyOwner {
+    tokensToFounders = newTokensToFounders;  
   }
 
   function setTokensToFoundation(uint newTokensToFoundation) public onlyOwner {
@@ -462,7 +466,7 @@ contract TGE is RetrieveTokenFeature {
     return (length>0);
   }
   
-  function addToWhiteList(address addr) public {
+  function addToWhiteList(address addr) public onlyOwner {
     whiteList[addr] = true;
   }
   
@@ -477,13 +481,13 @@ contract TGE is RetrieveTokenFeature {
     }
   }
   
-  function finish() public {
+  function finish() public onlyOwner {
     token.transfer(foundersTokensWallet, tokensToFounders);    
     token.transfer(foundationTokensWallet, tokensToFoundation);
     token.burn(token.balanceOf(this));
     token.unlock();
-    foundationTokensWallet.start();
-    foundationTokensWallet.transferOwnership(owner);
+    foundersTokensWallet.start();
+    foundersTokensWallet.transferOwnership(owner);
   }
   
 }

@@ -52,12 +52,12 @@ Purchaser must not use other wallets, coinmarkets or stocks. Can lose money.
 ### Tokens distribution
 * _Summarty token_             : 300 000 000 COFI
 * _Founders tokens_            : 30% - 90 000 000 COFI -  locked for two years with a 6 month cliff; that means tokens get slowly unlocked on a prorated basis every month starting 6 months after crowdsale until 2 years after end of crowdsale.
-* _Foudation tokens_           : 20% - 60 000 000 COFI + unsold tokens
+* _Foundation tokens_          : 20% - 60 000 000 COFI 
 * _Tokens to sell_             : 50% - 150 000 000 COFI
 
 ### Addresses
 * _Wallet for contribution_    :
-* _Foudation wallet_           :
+* _Foundation wallet_           :
 * _Contracts manager_          : 
 
 #### Links
