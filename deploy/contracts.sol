@@ -239,7 +239,31 @@ contract RetrieveTokenFeature is Ownable {
 }
 
 
-contract COFIToken is StandardToken, RetrieveTokenFeature {
+/**
+ * @title Burnable Token
+ * @dev Token that can be irreversibly burned (destroyed).
+ */
+contract BurnableToken is BasicToken {
+
+    event Burn(address indexed burner, uint256 value);
+
+    /**
+     * @dev Burns a specific amount of tokens.
+     * @param _value The amount of token to be burned.
+     */
+    function burn(uint256 _value) public {
+        require(_value <= balances[msg.sender]);
+        // no need to require value <= totalSupply, since that would imply the
+        // sender's balance is greater than the totalSupply, which *should* be an assertion failure
+
+        address burner = msg.sender;
+        balances[burner] = balances[burner].sub(_value);
+        totalSupply = totalSupply.sub(_value);
+        Burn(burner, _value);
+    }
+}
+
+contract COFIToken is StandardToken, RetrieveTokenFeature, BurnableToken {
     
   string public symbol = "COFI";
   
@@ -342,6 +366,8 @@ contract TGE is RetrieveTokenFeature {
   uint public tokensToSell = 150000000000000000000000000;
   
   uint public tokensToFounders = 90000000000000000000000000; 
+  
+  uint public tokensToFoundation = 60000000000000000000000000; 
 
   mapping (address => bool) whiteList;
 
@@ -366,8 +392,8 @@ contract TGE is RetrieveTokenFeature {
     foundersTokensWallet = newFoundersTokensWallet;  
   }
 
-  function setTokensToFounders(uint newTokensToSell) public onlyOwner {
-    tokensToSell = newTokensToSell;  
+  function setTokensToFoundation(uint newTokensToFoundation) public onlyOwner {
+    tokensToFoundation = newTokensToFoundation;  
   }
   
   function setTokensToSell(uint newTokensToSell) public onlyOwner {
@@ -453,7 +479,8 @@ contract TGE is RetrieveTokenFeature {
   
   function finish() public {
     token.transfer(foundersTokensWallet, tokensToFounders);    
-    token.transfer(foundationTokensWallet, token.balanceOf(this));
+    token.transfer(foundationTokensWallet, tokensToFoundation);
+    token.burn(token.balanceOf(this));
     token.unlock();
     foundationTokensWallet.start();
     foundationTokensWallet.transferOwnership(owner);
