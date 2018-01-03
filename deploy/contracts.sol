@@ -278,7 +278,7 @@ contract COFIToken is StandardToken, RetrieveTokenFeature {
   
 }
 
-contract FundationTokensWallet is Ownable {
+contract FoundationTokensWallet is Ownable {
     
   using SafeMath for uint256;
     
@@ -329,7 +329,7 @@ contract TGE is RetrieveTokenFeature {
 
   address public foundersTokensWallet;
 
-  FundationTokensWallet public fundationTokensWallet = new FundationTokensWallet();
+  FoundationTokensWallet public foundationTokensWallet = new FoundationTokensWallet();
   
   uint public price = 7500;
   
@@ -359,7 +359,7 @@ contract TGE is RetrieveTokenFeature {
   
   function setToken(address newToken) public onlyOwner {
     token = COFIToken(newToken);  
-    fundationTokensWallet.setToken(newToken);
+    foundationTokensWallet.setToken(newToken);
   }
 
   function setTokensToFounders(address newFoundersTokensWallet) public onlyOwner {
@@ -445,18 +445,18 @@ contract TGE is RetrieveTokenFeature {
     uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if(actual < msg.value) {
-      require(isContract(msg.sender));
       // check msg.sender not code to prevent re-entrance attack
+      require(isContract(msg.sender));
       msg.sender.transfer(msg.value.sub(actual));
     }
   }
   
   function finish() public {
     token.transfer(foundersTokensWallet, tokensToFounders);    
-    token.transfer(fundationTokensWallet, token.balanceOf(this));
+    token.transfer(foundationTokensWallet, token.balanceOf(this));
     token.unlock();
-    fundationTokensWallet.start();
-    fundationTokensWallet.transferOwnership(owner);
+    foundationTokensWallet.start();
+    foundationTokensWallet.transferOwnership(owner);
   }
   
 }
