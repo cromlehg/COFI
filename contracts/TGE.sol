@@ -39,11 +39,11 @@ contract TGE is RetrieveTokenFeature {
   mapping (address => bool) whiteList;
 
   function TGE() public {
-    addMilestone(1515974400,20,1516579200);
-    addMilestone(1516579200,15,1517097600);
-    addMilestone(1517184000,10,1517702400);
-    addMilestone(1517702400,5,1517706000);
-    addMilestone(1517706000,0,1519257600);
+    addMilestone(1515974400,1516579200,20);
+    addMilestone(1516579200,1517097600,15);
+    addMilestone(1517184000,1517702400,10);
+    addMilestone(1517702400,1517706000,5);
+    addMilestone(1517706000,1519257600,0);
   }
 
   function setWallet(address newWallet) public onlyOwner {
