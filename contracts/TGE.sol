@@ -143,7 +143,7 @@ contract TGE is RetrieveTokenFeature {
     wallet.transfer(actual);
     if (actual < msg.value) {
       // check msg.sender not code to prevent re-entrance attack
-      require(isContract(msg.sender));
+      require(!isContract(msg.sender));
       msg.sender.transfer(msg.value.sub(actual));
     }
   }
