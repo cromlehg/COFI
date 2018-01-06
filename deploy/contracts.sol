@@ -316,6 +316,8 @@ contract FoundersTokensWallet is Ownable {
 
   uint public started;
 
+  uint public retrievedTokens;
+
   uint public startBalance;
 
   function setToken(address newToken) public onlyOwner {
@@ -324,15 +326,19 @@ contract FoundersTokensWallet is Ownable {
 
   function start() public onlyOwner {
     started = now;
+    retrievedTokens = 0;
     startBalance = token.balanceOf(this);
   }
 
   function retrieveTokens(address to) public onlyOwner {
-    if(now > started + period) {
+    if (now > started + period) {
       token.transfer(to, token.balanceOf(this));
     } else {
-      uint cliffTokens = startBalance.div(period.div(duration));
-      uint tokensToRetreive = now.sub(started).div(duration).mul(cliffTokens);
+      require(now > started + duration);
+      uint timeSinceStart = now - started;
+      uint fullTokens = startBalance.mul(timeSinceStart).div(period);
+      uint tokensToRetreive = fullTokens - retrievedTokens;
+      retrievedTokens = retrievedTokens.add(tokensToRetreive);
       token.transfer(to, tokensToRetreive);
     }
   }
