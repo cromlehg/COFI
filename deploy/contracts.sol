@@ -265,9 +265,9 @@ contract BurnableToken is BasicToken {
 
 contract COFIToken is StandardToken, RetrieveTokenFeature, BurnableToken {
 
-  string public symbol = "COFI";
+  string public symbol = 'COFI';
 
-  string public name = "COFI";
+  string public name = 'COFI';
 
   uint8 public decimals = 18;
 
@@ -281,7 +281,7 @@ contract COFIToken is StandardToken, RetrieveTokenFeature, BurnableToken {
   }
 
   function COFIToken() public {
-    totalSupply =  300000000000000000000000000;
+    totalSupply = 300000000000000000000000000;
     balances[saleAgent] = totalSupply;
     TGE(saleAgent).setToken(this);
     TGE(saleAgent).transferOwnership(owner);
@@ -339,7 +339,8 @@ contract FoundersTokensWallet is Ownable {
 
 }
 
-contract TGE is RetrieveTokenFeature {
+
+ontract TGE is RetrieveTokenFeature {
 
   using SafeMath for uint256;
 
@@ -372,11 +373,11 @@ contract TGE is RetrieveTokenFeature {
   mapping (address => bool) whiteList;
 
   function TGE() public {
-    addMilestone(1515974400,20,1516579200);
-    addMilestone(1516579200,15,1517097600);
-    addMilestone(1517184000,10,1517702400);
-    addMilestone(1517702400,5,1517706000);
-    addMilestone(1517706000,0,1519257600);
+    addMilestone(1515974400,1516579200,20);
+    addMilestone(1516579200,1517097600,15);
+    addMilestone(1517184000,1517702400,10);
+    addMilestone(1517702400,1517706000,5);
+    addMilestone(1517706000,1519257600,0);
   }
 
   function setWallet(address newWallet) public onlyOwner {
@@ -420,8 +421,8 @@ contract TGE is RetrieveTokenFeature {
   }
 
   function getBonus() public view returns(uint) {
-    for(uint i = 0; i < milestones.length; i++) {
-      if(now >= milestones[i].start && now < milestones[i].end)
+    for (uint i = 0; i < milestones.length; i++) {
+      if (now >= milestones[i].start && now < milestones[i].end)
         return milestones[i].bonus;
     }
     revert();
@@ -430,14 +431,14 @@ contract TGE is RetrieveTokenFeature {
   function calculateTokens(uint amountInWei) public view returns(uint) {
     uint tokens = amountInWei.mul(price);
     uint bonus = getBonus();
-    if(bonus > 0)
+    if (bonus > 0)
       tokens = tokens.mul(bonus).div(PERCENT_RATE);
     return tokens;
   }
 
   function directTransfer(address to, uint amountTokensInDouble) public onlyOwner returns(uint) {
-    if(amountTokensInDouble > tokensToSell) {
-      amountTokensInDouble = amountTokensInDouble.sub(tokensToSell);
+    if (amountTokensInDouble > tokensToSell) {
+      amountTokensInDouble = tokensToSell;
     }
     tokensToSell = tokensToSell.sub(amountTokensInDouble);
     token.transfer(to, amountTokensInDouble);
@@ -447,9 +448,9 @@ contract TGE is RetrieveTokenFeature {
   function directTransferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
     uint calculatedTokens = calculateTokens(amountInWei);
     uint transferredTokens = directTransfer(to, calculatedTokens);
-    if(transferredTokens < calculatedTokens) {
+    if (transferredTokens < calculatedTokens) {
       uint bonus = getBonus();
-      if(bonus > 0) {
+      if (bonus > 0) {
         transferredTokens = transferredTokens.mul(PERCENT_RATE).div(bonus);
       }
       amountInWei = transferredTokens.div(price);
@@ -470,13 +471,13 @@ contract TGE is RetrieveTokenFeature {
     whiteList[addr] = true;
   }
 
-  function () external payable {
+  function () public payable {
     require(whiteList[msg.sender]);
     uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
-    if(actual < msg.value) {
+    if (actual < msg.value) {
       // check msg.sender not code to prevent re-entrance attack
-      require(isContract(msg.sender));
+      require(!isContract(msg.sender));
       msg.sender.transfer(msg.value.sub(actual));
     }
   }
