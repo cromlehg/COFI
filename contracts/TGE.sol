@@ -104,7 +104,7 @@ contract TGE is RetrieveTokenFeature {
 
   function directTransfer(address to, uint amountTokensInDouble) public onlyOwner returns(uint) {
     if (amountTokensInDouble > tokensToSell) {
-      amountTokensInDouble = amountTokensInDouble.sub(tokensToSell);
+      amountTokensInDouble = tokensToSell;
     }
     tokensToSell = tokensToSell.sub(amountTokensInDouble);
     token.transfer(to, amountTokensInDouble);
