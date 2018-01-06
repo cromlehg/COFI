@@ -137,7 +137,7 @@ contract TGE is RetrieveTokenFeature {
     whiteList[addr] = true;
   }
 
-  function () external payable {
+  function () public payable {
     require(whiteList[msg.sender]);
     uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
