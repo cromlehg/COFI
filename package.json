@@ -21,7 +21,11 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "truffle test"
+    "test": "truffle test",
+    "flatten": "npm run flatten-token && npm run flatten-wallet && npm run flatten-tge",
+    "flatten-token": "./node_modules/.bin/truffle-flattener ./contracts/COFIToken.sol > ./deploy/COFIToken.sol",
+    "flatten-wallet": "./node_modules/.bin/truffle-flattener ./contracts/FoundersTokensWallet.sol > ./deploy/FoundersTokensWallet.sol",
+    "flatten-tge": "./node_modules/.bin/truffle-flattener ./contracts/TGE.sol > ./deploy/TGE.sol"
   },
   "repository": {
     "type": "git",
