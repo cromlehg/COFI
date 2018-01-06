@@ -5,7 +5,6 @@ import './token/StandardToken.sol';
 import './token/BurnableToken.sol';
 import './RetrieveTokenFeature.sol';
 import './TGE.sol';
-import './COFIToken.sol';
 
 
 contract COFIToken is StandardToken, RetrieveTokenFeature, BurnableToken {
