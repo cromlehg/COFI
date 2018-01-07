@@ -346,7 +346,7 @@ contract FoundersTokensWallet is Ownable {
 }
 
 
-ontract TGE is RetrieveTokenFeature {
+contract TGE is RetrieveTokenFeature {
 
   using SafeMath for uint256;
 
