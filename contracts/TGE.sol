@@ -97,8 +97,10 @@ contract TGE is RetrieveTokenFeature {
   function calculateTokens(uint amountInWei) public view returns(uint) {
     uint tokens = amountInWei.mul(price);
     uint bonus = getBonus();
-    if (bonus > 0)
-      tokens = tokens.mul(bonus).div(PERCENT_RATE);
+    if (bonus > 0) {
+      uint bonusTokens = tokens.mul(bonus).div(PERCENT_RATE);
+      tokens = tokens.add(bonusTokens);
+    }
     return tokens;
   }
 
