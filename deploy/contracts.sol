@@ -459,7 +459,7 @@ ontract TGE is RetrieveTokenFeature {
     if (transferredTokens < calculatedTokens) {
       uint bonus = getBonus();
       if (bonus > 0) {
-        transferredTokens = transferredTokens.mul(PERCENT_RATE).div(bonus);
+        transferredTokens = transferredTokens.div(bonus.div(PERCENT_RATE).add(1));
       }
       amountInWei = transferredTokens.div(price);
     }
