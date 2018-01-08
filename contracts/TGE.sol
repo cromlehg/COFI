@@ -121,7 +121,7 @@ contract TGE is RetrieveTokenFeature {
     if (transferredTokens < calculatedTokens) {
       uint bonus = getBonus();
       if (bonus > 0) {
-        transferredTokens = transferredTokens.div(bonus.div(PERCENT_RATE).add(1));
+        transferredTokens = transferredTokens.mul(PERCENT_RATE).div(bonus.add(PERCENT_RATE));
       }
       amountInWei = transferredTokens.div(price);
     }
