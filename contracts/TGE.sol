@@ -24,6 +24,8 @@ contract TGE is RetrieveTokenFeature {
 
   uint public price = 7500;
 
+  uint public minPurchaseLimit = 100000000000000000;
+
   Milestone[] public milestones;
 
   COFIToken public token;
@@ -140,7 +142,7 @@ contract TGE is RetrieveTokenFeature {
   }
 
   function () public payable {
-    require(whiteList[msg.sender]);
+    require(whiteList[msg.sender] && msg.value >= minPurchaseLimit);
     uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if (actual < msg.value) {
