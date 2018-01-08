@@ -69,7 +69,7 @@ Purchaser must not use other wallets, coinmarkets or stocks. Can lose money.
 #### Token General Event
 * _Base price_                 : 1 ETH = 7500 COFI
 * _Minimal insvested limit_    : 0.1 ETH
-* _Hardcap_                    : 150 000 000 LCC
+* _Hardcap_                    : 150 000 000 COFI
 
 _Milestones_
 1. (15 Jan 2018 00:00 - 22 Jan 2018 00:00) +20% tokens
@@ -78,7 +78,7 @@ _Milestones_
 4. (4 Feb 2018 00:00 - 4 Feb 2018 01:00 ) +5% tokens
 5. (4 Feb 2018 01:00 - 22 Feb 2018 00:00) without bonus
 
-## Ropsten network configuration
+## Ropsten network configuration (Test #1)
 
 ### Tokens distribution
 * _Summarty token_             : 300 000 000 COFI
@@ -101,7 +101,7 @@ _Milestones_
 #### Token General Event
 * _Base price_                 : 1 ETH = 7500 COFI
 * _Minimal insvested limit_    : 0.1 ETH
-* _Hardcap_                    : 150 000 000 LCC
+* _Hardcap_                    : 150 000 000 COFI
 
 _Milestones_
 1. (15 Jan 2018 00:00 - 22 Jan 2018 00:00) +20% tokens
@@ -142,3 +142,63 @@ https://ropsten.etherscan.io/tx/0x7e8a20ec4fb6b20a74eadd7543835ac5602041f6d204fd
 ### Test audit (Token)
 * Transfer 50 tokens, gas = 52856
 https://ropsten.etherscan.io/tx/0xd36bf78e2d5260fdfc5f7c983d3639def945573e1af8fadabb81066cb31e4fed
+
+## Ropsten network configuration (Test #2)
+
+### Tokens distribution
+* _Summarty token_             : 150 015 000 COFI - reduced for test purposes
+* _Founders tokens_            : 90 000 000 COFI -  locked for two hours with a 30 minutes cliff
+* _Foundation tokens_          : 60 000 000 COFI 
+* _Tokens to sell_             : 15 000 COFI - reduced for test purposes
+* _Unsold tokens_              : Burned
+
+### Addresses
+* _Wallet for contribution_    : 0xd89626E2c4218281Ad0Fc5F22AE52dC0FF39DDC4
+* _Founders wallet_            : 0x796b57f96cb7661654981032a5f53047a560e3e0
+* _Foundation wallet_          : 0xDa67155b22973bE05Bcd28c07107b2E17314A1e2
+* _Contracts manager_          : 0xf62158b03Edbdb92a12c64E4D8873195AC71aF6A
+
+#### Links
+* _Token_ - https://ropsten.etherscan.io/address/0xec0d419c6debb7c50406f70c9b8f46723de3a764
+* _TGE_ - https://ropsten.etherscan.io/address/0x5bfb67a57622ff9cb4d7ae35ab7d16d449650f32
+* _TimelineWallet_ - https://ropsten.etherscan.io/address/0xf5ba3de4e7f84d302287039b3ef1914d7a377e45
+
+#### Token General Event
+* _Base price_                 : 1 ETH = 7500 COFI
+* _Minimal insvested limit_    : 0.1 ETH
+* _Hardcap_                    : 15 000 COFI
+
+_Milestones_
+1. (09 Jan 2018 00:00 - 09 Jan 2018 01:00) +20% tokens
+2. (22 Jan 2018 00:00 - 28 Jan 2018 00:00) +15% tokens
+3. (29 Jan 2018 00:00 - 4 Feb 2018 00:00) +10% tokens
+4. (4 Feb 2018 00:00 - 4 Feb 2018 01:00 ) +5% tokens
+5. (4 Feb 2018 01:00 - 22 Feb 2018 00:00) without bonus
+
+### Test audit (TGE)
+#### Purchasers
+* 4 Ether => 15 000 tokens (all awailable) + 2.333333333333333334 Ether back to purchaser, 20% bonus, gas = 65234
+https://ropsten.etherscan.io/tx/0x6158b00663f5ff5858832701b31f387151c15442f5f9c15b0e57f0c8f0ad8ce3
+* 0.1 Ether => 0 tokens (0 tokens awailable for sail) + 0.1 Ether back to purchaser, gas = 58477
+
+#### Service operations
+* addToWhiteList, gas = 43711
+https://ropsten.etherscan.io/tx/0xc8d6874417e87c5bd78a3051237fcb9b3b8cdb98b30c0fbe829d23f29a341e7d
+* setWallet, gas = 44078
+https://ropsten.etherscan.io/tx/0xdc71e30bf6aa853a2372fb1609e66b8bbae5c58fc841ec58b3a9fc0ef2368747
+* setFoundationTokensWallet, gas = 43748
+https://ropsten.etherscan.io/tx/0xa7c654c1c2217feeeabcb34101cacce1f81d24aa9b2a5b519dce1ac8a9b56345
+* finish, gas = 171841
+https://ropsten.etherscan.io/tx/0x727d6195b7c7e2a908887e126b8b37cb5b1cc6e10ccc8afc3d509a7713317ea1
+
+### Test audit (FoundersTokensWallet)
+Rejected retrieveTokens before first cliff, gas = 23850
+https://ropsten.etherscan.io/tx/0x24d099a91e03d8989e69ec4b67eb55e6b0a0998e3a884acf18dcc2e8ea637a0a
+retrieveTokens between first and second cliffs => 22 500 000 tokens to wallet, gas = 78098
+https://ropsten.etherscan.io/tx/0x7fd68e8dc22b8b3d860722444320798f8b580a778b27b9c7ef54b52f4c878576
+retrieveTokens between first and second cliffs => 0 tokens to wallet, gas = 26189
+https://ropsten.etherscan.io/tx/0x76b8935b782ab0def917c575eb139c23b7efa3849e23c9c8541e86c3a898b5bc
+retrieveTokens between second and third cliffs => 22 500 000 tokens to wallet, gas = 48098
+https://ropsten.etherscan.io/tx/0x3a283d652bb936f25ee952ab8180344adbd27a72f92caea5275c547016dda4fd
+retrieveTokens between second and third cliffs => 0 tokens to wallet, gas = 26189
+https://ropsten.etherscan.io/tx/0xd896a14c62efe43301e79c1e37bff7965971bfbeba176337d800cf988de7e89b
