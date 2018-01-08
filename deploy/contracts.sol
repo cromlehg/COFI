@@ -331,15 +331,20 @@ contract FoundersTokensWallet is Ownable {
   }
 
   function retrieveTokens(address to) public onlyOwner {
-    if (now > started + period) {
+    require(now >= started + duration);
+    if (now >= started + period) {
       token.transfer(to, token.balanceOf(this));
     } else {
-      require(now > started + duration);
-      uint timeSinceStart = now - started;
-      uint fullTokens = startBalance.mul(timeSinceStart).div(period);
-      uint tokensToRetreive = fullTokens - retrievedTokens;
-      retrievedTokens = retrievedTokens.add(tokensToRetreive);
-      token.transfer(to, tokensToRetreive);
+      uint parts = period.div(duration);
+      uint tokensByPart = startBalance.div(parts);
+      uint timeSinceStart = now.sub(started);
+      uint pastParts = timeSinceStart.div(duration);
+      uint tokensToRetrieveSinceStart = pastParts.mul(tokensByPart);
+      uint tokensToRetrieve = tokensToRetrieveSinceStart.sub(retrievedTokens);
+      if (tokensToRetrieve > 0) {
+        retrievedTokens = retrievedTokens.add(tokensToRetrieve);
+        token.transfer(to, tokensToRetrieve);
+      }
     }
   }
 
