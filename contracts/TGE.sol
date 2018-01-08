@@ -106,7 +106,7 @@ contract TGE is RetrieveTokenFeature {
     return tokens;
   }
 
-  function directTransfer(address to, uint amountTokensInDouble) public onlyOwner returns(uint) {
+  function directTransfer(address to, uint amountTokensInDouble) internal returns(uint) {
     if (amountTokensInDouble > tokensToSell) {
       amountTokensInDouble = tokensToSell;
     }
@@ -115,7 +115,7 @@ contract TGE is RetrieveTokenFeature {
     return amountTokensInDouble;
   }
 
-  function directTransferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
+  function directTransferByETH(address to, uint amountInWei) internal returns(uint) {
     uint calculatedTokens = calculateTokens(amountInWei);
     uint transferredTokens = directTransfer(to, calculatedTokens);
     if (transferredTokens < calculatedTokens) {
@@ -126,6 +126,10 @@ contract TGE is RetrieveTokenFeature {
       amountInWei = transferredTokens.div(price);
     }
     return amountInWei;
+  }
+
+  function manualTransferByETH(address to, uint amountInWei) public onlyOwner returns(uint) {
+    return directTransferByETH(to, amountInWei);
   }
 
   function isContract(address _addr) private view returns (bool is_contract) {
