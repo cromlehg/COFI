@@ -51,7 +51,7 @@ Purchaser must not use other wallets, coinmarkets or stocks. Can lose money.
 
 ### Tokens distribution
 * _Summarty token_             : 300 000 000 COFI
-* _Founders tokens_            : 30% - 90 000 000 COFI -  locked for two years with a 6 month cliff; that means tokens get slowly unlocked on a prorated basis every month starting 6 months after crowdsale until 2 years after end of crowdsale.
+* _Founders tokens_            : 30% - 90 000 000 COFI - locked for two years with a 24 weeks cliff; that means tokens get slowly unlocked on a prorated basis every 24 weeks starting 24 weeks after crowdsale until 2 years after end of crowdsale.
 * _Foundation tokens_          : 20% - 60 000 000 COFI 
 * _Tokens to sell_             : 50% - 150 000 000 COFI
 * _Unsold tokens_              : Burned
@@ -82,7 +82,7 @@ _Milestones_
 
 ### Tokens distribution
 * _Summarty token_             : 300 000 000 COFI
-* _Founders tokens_            : 30% - 90 000 000 COFI -  locked for two years with a 6 month cliff; that means tokens get slowly unlocked on a prorated basis every month starting 6 months after crowdsale until 2 years after end of crowdsale.
+* _Founders tokens_            : 30% - 90 000 000 COFI
 * _Foundation tokens_          : 20% - 60 000 000 COFI 
 * _Tokens to sell_             : 50% - 150 000 000 COFI
 * _Unsold tokens_              : Burned
@@ -202,3 +202,5 @@ retrieveTokens between second and third cliffs => 22 500 000 tokens to wallet, g
 https://ropsten.etherscan.io/tx/0x3a283d652bb936f25ee952ab8180344adbd27a72f92caea5275c547016dda4fd
 retrieveTokens between second and third cliffs => 0 tokens to wallet, gas = 26189
 https://ropsten.etherscan.io/tx/0xd896a14c62efe43301e79c1e37bff7965971bfbeba176337d800cf988de7e89b
+retrieveTokens after the last cliff => 45 000 000 tokens to wallet, gas = 28476
+https://ropsten.etherscan.io/tx/0x67cc1bc3e3b35f8065f6d0ef6d9ff949c72d7cf5259416fbd1b78136bbd0b093
