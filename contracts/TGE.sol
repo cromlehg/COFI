@@ -146,7 +146,7 @@ contract TGE is RetrieveTokenFeature {
   }
 
   function () public payable {
-    require(whiteList[msg.sender] && msg.value >= minPurchaseLimit);
+    require(whiteList[msg.sender] && msg.value >= minPurchaseLimit && tokensToSell > 0);
     uint actual = directTransferByETH(msg.sender, msg.value);
     wallet.transfer(actual);
     if (actual < msg.value) {
